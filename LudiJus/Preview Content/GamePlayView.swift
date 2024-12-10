@@ -13,6 +13,7 @@ struct GamePlayView: View {
     @State private var selectedAnswer: String? = nil
     @State private var isAnswerCorrect: Bool? = nil
     @State private var showFeedback = false
+    @State private var isGameOver = false  // Flag para verificar se o jogo acabou
     
     let questions = [
         Question(
@@ -85,22 +86,40 @@ struct GamePlayView: View {
 
                 Spacer()
 
-                // Botão para continuar para a próxima pergunta
+                // Botão para continuar para a próxima pergunta ou fim de jogo
                 if showFeedback {
-                    Button(action: {
-                        nextQuestion()
-                    }) {
-                        Text("Próxima Pergunta")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.orangeSecondary)
-                            .cornerRadius(10)
-                            .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 5)
+                    if isGameOver {
+                        Button(action: {
+                            // Ação para concluir a fase, como reiniciar o jogo ou mostrar o resultado final
+                            print("Fim de jogo. Sua pontuação final foi \(playerScore)")
+                        }) {
+                            Text("Fim de Jogo")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.orangeSecondary)
+                                .cornerRadius(10)
+                                .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 5)
+                        }
+                        .padding(.horizontal, 40)
+                    } else {
+                        Button(action: {
+                            nextQuestion()
+                        }) {
+                            Text("Próxima Pergunta")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.orangeSecondary)
+                                .cornerRadius(10)
+                                .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 5)
+                        }
+                        .padding(.horizontal, 40)
                     }
-                    .padding(.horizontal, 40)
                 }
             }
             .padding()
@@ -121,7 +140,7 @@ struct GamePlayView: View {
         showFeedback = true
     }
 
-    // Função para ir para a próxima pergunta
+    // Função para ir para a próxima pergunta ou concluir o jogo
     private func nextQuestion() {
         if currentQuestionIndex + 1 < questions.count {
             currentQuestionIndex += 1
@@ -130,7 +149,7 @@ struct GamePlayView: View {
             showFeedback = false
         } else {
             // Se o jogo terminar
-            print("Fim de jogo. Sua pontuação final foi \(playerScore)")
+            isGameOver = true
         }
     }
 }
